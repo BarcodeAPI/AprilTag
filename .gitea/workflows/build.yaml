@@ -1,0 +1,25 @@
+name: Java Build
+
+on: [push]
+
+jobs:
+  Build:
+    runs-on: linux-amd64
+    steps:
+    - name: Clone Repository
+      run: |
+        repo="ssh://git@git.mclarkdev.com:2222/${{ gitea.repository }}"
+        echo "Cloning $repo" && git clone --recurse-submodules $repo .  
+        git checkout $GITHUB_REF_NAME             
+    - name: Build artifacts with Maven
+      run: mvn clean install
+    - name: Package the artifacts
+      run: |
+        mkdir release/
+        cp target/*.jar release/        
+    - name: Archive job artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-${{ github.run_id }}
+        path: |
+          release/
