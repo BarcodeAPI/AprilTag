@@ -33,6 +33,7 @@ public class ImageLayout {
 	static final int WHITE = 0xffffffff;
 	static final int BLACK = 0xff000000;
 	static final int TRANSPARENT = 0x00000000;
+
 	private String name;
 	private int numBits;
 	private int size;
@@ -261,10 +262,6 @@ public class ImageLayout {
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getDataString() {
