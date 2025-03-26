@@ -15,6 +15,6 @@
 	</properties>
 
 	<build>
-		<sourceDirectory>src/april</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
 	</build>
 </project>

@@ -25,61 +25,17 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package april.tag;
+package org.barcodeapi.apriltag.families;
 
-/** Tag family with 38 distinct codes.
-    bits: 21,  minimum hamming: 7,  minimum complexity: 10
+import org.barcodeapi.apriltag.TagFamily;
 
-    Max bits corrected       False positive rate
-            0                  0.00181198 %
-            1                  0.03986359 %
-            2                  0.42037964 %
-            3                  2.83031464 %
-
-    Generation time: 0.937000 s
-
-    Hamming distance between pairs of codes (accounting for rotation):
-
-       0  0
-       1  0
-       2  0
-       3  0
-       4  0
-       5  0
-       6  0
-       7  164
-       8  255
-       9  162
-      10  78
-      11  31
-      12  10
-      13  3
-      14  0
-      15  0
-      16  0
-      17  0
-      18  0
-      19  0
-      20  0
-      21  0
-**/
-public class TagCircle21h7 extends TagFamily
-{
-	private static class ConstructCodes0 {
-		private static long[] constructCodes() {
-			return new long[] { 0x157863L, 0x47e28L, 0x1383edL, 0x0953cL, 0xda68bL, 0x1cac50L, 0xbb215L, 0x16ceeeL, 0x5d4b3L, 0x1ff751L, 0xefd16L, 0x72b3eL, 0x163103L, 0x106e56L, 0x1996b9L, 0xc0234L, 0x624d2L, 0x1fa985L, 0x344a5L, 0x762fbL, 0x19e92bL, 0x43755L, 0x1a4f4L, 0x10fad8L, 0x01b52L, 0x17e59fL, 0xe6f70L, 0xed47aL, 0xc9931L, 0x14df2L, 0xa06f1L, 0xe5041L, 0x12ec03L, 0x16724eL, 0xaf1a5L, 0x8a8acL, 0x15b39L, 0x1ec1e3L };
-		}
-	}
-
-	private static long[] constructCodes() {
-		long[] codes = new long[38];
-		System.arraycopy(ConstructCodes0.constructCodes(), 0, codes, 0, 38);
-		return codes;
-	}
-
-	public TagCircle21h7()
-	{
-		super(ImageLayout.Factory.createFromString("Circle", "xxxdddxxxxbbbbbbbxxbwwwwwbxdbwdddwbddbwdddwbddbwdddwbdxbwwwwwbxxbbbbbbbxxxxdddxxx"), 7, constructCodes());
+public class Tag25h9 extends TagFamily {
+	public Tag25h9() {
+		super(25, 9,
+				new long[] { 0x155cbf1L, 0x1e4d1b6L, 0x17b0b68L, 0x1eac9cdL, 0x12e14ceL, 0x3548bbL, 0x7757e6L,
+						0x1065dabL, 0x1baa2e7L, 0xdea688L, 0x81d927L, 0x51b241L, 0xdbc8aeL, 0x1e50e19L, 0x15819d2L,
+						0x16d8282L, 0x163e035L, 0x9d9b81L, 0x173eec4L, 0xae3a09L, 0x5f7c51L, 0x1a137fcL, 0xdc9562L,
+						0x1802e45L, 0x1c3542cL, 0x870fa4L, 0x914709L, 0x16684f0L, 0xc8f2a5L, 0x833ebbL, 0x59717fL,
+						0x13cd050L, 0xfa0ad1L, 0x1b763b0L, 0xb991ceL });
 	}
 }
-

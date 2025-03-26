@@ -25,7 +25,11 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package april.tag;
+package org.barcodeapi.apriltag.families;
+
+import org.barcodeapi.apriltag.ImageLayout;
+import org.barcodeapi.apriltag.TagFamily;
+import org.barcodeapi.apriltag.ImageLayout.Factory;
 
 /** Tag family with 2115 distinct codes.
     bits: 41,  minimum hamming: 12,  minimum complexity: 10

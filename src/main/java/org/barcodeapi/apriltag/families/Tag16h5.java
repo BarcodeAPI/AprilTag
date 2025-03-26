@@ -25,41 +25,15 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package april.tag;
+package org.barcodeapi.apriltag.families;
 
-import java.io.File;
-import java.io.IOException;
+import org.barcodeapi.apriltag.TagFamily;
 
-public class GenerateTags {
-    public static void main(String args[])
-    {
-        if (args.length != 2) {
-            System.out.printf("Usage: <tagclass> <outputdir>\n");
-            System.out.printf("Example: april.tag.Tag25h11 /tmp/tag25h11\n");
-            return;
-        }
-
-        String cls = args[0];
-        String dirpath = args[1] + "/";
-
-        TagFamily tagFamily = (TagFamily) april.util.ReflectUtil.createObject(cls);
-        if (tagFamily == null) {
-            System.err.println("Tag family not found.");
-            return;
-        }
-
-        TagRenderer renderer = new TagRenderer(tagFamily);
-
-        try {
-            File f = new File(dirpath);
-            if (!f.exists())
-                f.mkdirs();
-
-            renderer.writeAllImagesMosaic(dirpath+"mosaic.png");
-            renderer.writeAllImages(dirpath, tagFamily.getFilePrefix());
-            renderer.writeAllImagesPostScript(dirpath+"alltags.ps");
-        } catch (IOException ex) {
-            System.out.println("ex: "+ex);
-        }
-    }
+public class Tag16h5 extends TagFamily {
+	public Tag16h5() {
+		super(16, 5,
+				new long[] { 0x231bL, 0x2ea5L, 0x346aL, 0x45b9L, 0x79a6L, 0x7f6bL, 0xb358L, 0xe745L, 0xfe59L, 0x156dL,
+						0x380bL, 0xf0abL, 0x0d84L, 0x4736L, 0x8c72L, 0xaf10L, 0x093cL, 0x93b4L, 0xa503L, 0x468fL,
+						0xe137L, 0x5795L, 0xdf42L, 0x1c1dL, 0xe9dcL, 0x73adL, 0xad5fL, 0xd530L, 0x07caL, 0xaf2eL });
+	}
 }
