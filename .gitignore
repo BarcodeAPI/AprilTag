@@ -1,4 +1,4 @@
 april.jar
 *.swp
-
+/tags/
 /target/

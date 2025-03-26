@@ -33,63 +33,60 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.barcodeapi.apriltag.families.Tag16h5;
-import org.barcodeapi.apriltag.families.Tag25h9;
-import org.barcodeapi.apriltag.families.Tag36h10;
-import org.barcodeapi.apriltag.families.Tag36h11;
-import org.barcodeapi.apriltag.families.Tag36h9;
-import org.barcodeapi.apriltag.families.TagCircle21h7;
-import org.barcodeapi.apriltag.families.TagCircle49h12;
-import org.barcodeapi.apriltag.families.TagCustom48h12;
-import org.barcodeapi.apriltag.families.TagStandard41h12;
-import org.barcodeapi.apriltag.families.TagStandard52h13;
-
 public class GenerateTags {
-	public static void main(String args[]) {
 
-		render(new Tag16h5());
-		render(new Tag25h9());
-		render(new Tag36h9());
-		render(new Tag36h10());
-		render(new Tag36h11());
-		render(new TagCircle21h7());
-		render(new TagCircle49h12());
-		render(new TagCustom48h12());
-		render(new TagStandard41h12());
-		render(new TagStandard52h13());
+	private static final String PACKAGE = "org.barcodeapi.apriltag.families";
+
+	public static void main(String args[]) throws Exception {
+
+		String tagType = args[0];
+
+		// Lookup the tagFamily class by name
+		Class<? extends TagFamily> clazz = Class.forName(//
+				String.format("%s.%s", PACKAGE, tagType))//
+				.asSubclass(TagFamily.class);
+
+		// Create the tagFamily instance
+		TagFamily tagFamily = clazz//
+				.getDeclaredConstructor().newInstance();
+
+		// Render the tags
+		renderTagFamily(tagFamily);
 	}
 
-	public static void render(TagFamily tagFamily) {
+	public static void renderTagFamily(TagFamily tagFamily) {
+		long timeStart = System.currentTimeMillis();
 
-		File f = new File(tagFamily.getFilePrefix());
-		if (!f.exists()) {
-			f.mkdirs();
+		// Create directory for tag family
+		File tagDir = new File("tags", tagFamily.getFilePrefix());
+		if (!tagDir.exists()) {
+			tagDir.mkdirs();
 		}
 
-		System.out.println("Writing: " + tagFamily.getFilePrefix());
-		int count = tagFamily.getCodes().length;
+		// Print number of tags to be rendered
+		int countTags = tagFamily.getCodes().length;
+		System.out.printf("Generating %d tags for %s\n", //
+				countTags, tagFamily.getFilePrefix());
 
-		long start = System.currentTimeMillis();
+		// Loop each of the codes in the family
+		for (int tagId = 0; tagId < countTags; tagId++) {
 
-		for (int id = 0; id < count; id++) {
+			// Get code and render the image
+			BufferedImage img = tagFamily.getLayout()//
+					.renderToImage(tagFamily.getCodes()[tagId], 8);
 
-			render(tagFamily, id);
+			try {
+
+				// Save image to file on disk
+				ImageIO.write(img, "png", //
+						new File(tagDir, String.format("%05d.png", tagId)));
+			} catch (IOException ex) {
+				System.out.println("ex: " + ex);
+			}
 		}
 
-		long process = (System.currentTimeMillis() - start);
-
-		System.out.println("Done: " + process + "ms");
-	}
-
-	public static void render(TagFamily tag, int id) {
-
-		BufferedImage img = tag.getLayout().renderToImage(tag.getCodes()[0]);
-		String fname = String.format("%05d.png", id);
-
-		try {
-			ImageIO.write(img, "png", new File(tag.getFilePrefix(), fname));
-		} catch (IOException ex) {
-			System.out.println("ex: " + ex);
-		}
+		// Calculate and print render time for family
+		long timeRender = (System.currentTimeMillis() - timeStart);
+		System.out.printf("Done: %dms\n\n", timeRender);
 	}
 }

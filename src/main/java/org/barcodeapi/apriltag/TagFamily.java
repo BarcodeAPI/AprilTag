@@ -28,7 +28,7 @@ either expressed or implied, of the Regents of The University of Michigan.
 package org.barcodeapi.apriltag;
 
 /** Generic class for all tag encoding families **/
-public class TagFamily {
+public abstract class TagFamily {
 
 	/** The array of the codes. The id for a code is its index. **/
 	private final long codes[];
@@ -80,23 +80,6 @@ public class TagFamily {
 			fixed_codes[i] = upgradeCode(oldCodes[i], bitLocations, size);
 		}
 		return fixed_codes;
-	}
-
-	/**
-	 * Assuming we are draw the image one quadrant at a time, what would the rotated
-	 * image look like? Special care is taken to handle the case where there is a
-	 * middle pixel of the image.
-	 */
-	public static long rotate90(long w, int numBits) {
-		int p = numBits;
-		int l = 0;
-		if (numBits % 4 == 1) {
-			p = numBits - 1;
-			l = 1;
-		}
-		w = ((w >> l) << (p / 4 + l)) | (w >> (3 * p / 4 + l) << l) | (w & l);
-		w &= ((1L << numBits) - 1);
-		return w;
 	}
 
 	public long[] getCodes() {

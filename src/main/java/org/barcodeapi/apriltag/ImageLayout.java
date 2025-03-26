@@ -27,12 +27,14 @@ either expressed or implied, of the Regents of The University of Michigan.
 
 package org.barcodeapi.apriltag;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class ImageLayout {
-	static final int WHITE = 0xffffffff;
-	static final int BLACK = 0xff000000;
-	static final int TRANSPARENT = 0x00000000;
+	static final Color WHITE = new Color(255, 255, 255, 255);
+	static final Color BLACK = new Color(0, 0, 0, 255);
+	static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
 	private String name;
 	private int numBits;
@@ -43,7 +45,7 @@ public class ImageLayout {
 	private boolean reversedBorder;
 
 	public enum PixelType {
-		NOTHING, WHITE, BLACK, DATA, RECURSIVE
+		NOTHING, WHITE, BLACK, DATA
 	}
 
 	private PixelType[][] pixels;
@@ -140,8 +142,6 @@ public class ImageLayout {
 				return PixelType.WHITE;
 			case 'b':
 				return PixelType.BLACK;
-			case 'r':
-				throw new RuntimeException("Not implemented."); // TODO
 			default:
 				throw new RuntimeException("Invalid character.");
 			}
@@ -152,56 +152,75 @@ public class ImageLayout {
 		return numBits;
 	}
 
-	public static int[][] rotate90(int[][] im1) {
-		int[][] im2 = new int[im1.length][im1.length];
+	public static char[][] rotate90(char[][] im1) {
+		char[][] im2 = new char[im1.length][im1.length];
 
+		// Loop all data for X/Y
 		for (int y = 0; y < im1.length; y++) {
 			for (int x = 0; x < im1.length; x++) {
+
+				// Update data in new matrix
 				im2[im1.length - 1 - x][y] = im1[y][x];
 			}
 		}
 		return im2;
 	}
 
-	public BufferedImage renderToImage(long code) {
-		int[][] imageData = renderToArray(code);
+	public BufferedImage renderToImage(long code, int scale) {
+		char[][] imageData = renderToArray(code);
 
-		BufferedImage im = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		// Calculate new size
+		int scaledSize = (size * scale);
+
+		// Create new image canvas
+		BufferedImage img = new BufferedImage(//
+				scaledSize, scaledSize, //
+				BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics g2d = img.getGraphics();
+
+		// Loop all data for X/Y
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				int value;
+
+				// Set color based on data
 				switch (imageData[y][x]) {
 				case 0:
-					value = BLACK;
+					g2d.setColor(BLACK);
 					break;
 				case 1:
-					value = WHITE;
+					g2d.setColor(WHITE);
 					break;
 				case 2:
-					value = TRANSPARENT;
+					g2d.setColor(TRANSPARENT);
 					break;
 				default:
 					throw new RuntimeException("Unknown image pixel color.");
 				}
-				im.setRGB(x, y, value);
+
+				// Draw the block
+				g2d.fillRect(//
+						(x * scale), //
+						(y * scale), //
+						scale, scale);
 			}
 		}
-		return im;
+
+		return img;
 	}
 
 	/**
 	 * Render to an int array. Used for rendering image output and also for
 	 * computing complexity.
 	 */
-	public int[][] renderToArray(long code) {
-		int[][] im = new int[size][size];
+	public char[][] renderToArray(long code) {
+		char[][] img = new char[size][size];
 
 		for (int i = 0; i < 4; i++) {
-			im = rotate90(im);
+			img = rotate90(img);
 			// Render one-quarter of the image
 			for (int y = 0; y <= size / 2; y++) {
 				for (int x = y; x < size - 1 - y; x++) {
-					int color;
+					char color;
 					switch (pixels[y][x]) {
 					case DATA:
 						if ((code & (1L << (numBits - 1))) != 0) {
@@ -223,14 +242,14 @@ public class ImageLayout {
 					default:
 						throw new RuntimeException("Impossible state");
 					}
-					im[y][x] = color;
+					img[y][x] = color;
 				}
 			}
 		}
 
 		// If there is a middle pixel, set it.
 		if (size % 2 == 1) {
-			int color;
+			char color;
 			switch (pixels[size / 2][size / 2]) {
 			case DATA:
 				if ((code & (1L << (numBits - 1))) != 0) {
@@ -251,9 +270,9 @@ public class ImageLayout {
 			default:
 				throw new RuntimeException("Impossible state");
 			}
-			im[size / 2][size / 2] = color;
+			img[size / 2][size / 2] = color;
 		}
-		return rotate90(im);
+		return rotate90(img);
 	}
 
 	public int getSize() {
