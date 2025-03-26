@@ -16,7 +16,7 @@ jobs:
     - name: Package the artifacts
       run: |
         mkdir release/
-        cp target/*.jar release/        
+        cp target/apriltag.jar release/        
     - name: Archive job artifact
       uses: actions/upload-artifact@v3
       with:
