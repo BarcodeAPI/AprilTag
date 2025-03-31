@@ -25,44 +25,15 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package org.barcodeapi.apriltag;
+package com.mclarkdev.tools.libapriltag.families;
 
-public class LayoutUtil {
+import com.mclarkdev.tools.libapriltag.TagFamily;
 
-	private static int l1DistToEdge(int x, int y, int size) {
-		return Math.min(Math.min(x, size - 1 - x), Math.min(y, size - 1 - y));
-	}
-
-	public static ImageLayout getClassicLayout(int size) {
-		StringBuilder sb = new StringBuilder();
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
-				if (LayoutUtil.l1DistToEdge(x, y, size) == 0) {
-					sb.append('w');
-				} else if (LayoutUtil.l1DistToEdge(x, y, size) == 1) {
-					sb.append('b');
-				} else {
-					sb.append('d');
-				}
-			}
-		}
-		// Classic layout has no name for backwards compatibility.
-		return ImageLayout.Factory.createFromString("", sb.toString());
-	}
-
-	public static ImageLayout getStandardLayout(int size) {
-		StringBuilder sb = new StringBuilder();
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
-				if (LayoutUtil.l1DistToEdge(x, y, size) == 1) {
-					sb.append('b');
-				} else if (LayoutUtil.l1DistToEdge(x, y, size) == 2) {
-					sb.append('w');
-				} else {
-					sb.append('d');
-				}
-			}
-		}
-		return ImageLayout.Factory.createFromString("Standard", sb.toString());
+public class Tag16h5 extends TagFamily {
+	public Tag16h5() {
+		super(16, 5,
+				new long[] { 0x231bL, 0x2ea5L, 0x346aL, 0x45b9L, 0x79a6L, 0x7f6bL, 0xb358L, 0xe745L, 0xfe59L, 0x156dL,
+						0x380bL, 0xf0abL, 0x0d84L, 0x4736L, 0x8c72L, 0xaf10L, 0x093cL, 0x93b4L, 0xa503L, 0x468fL,
+						0xe137L, 0x5795L, 0xdf42L, 0x1c1dL, 0xe9dcL, 0x73adL, 0xad5fL, 0xd530L, 0x07caL, 0xaf2eL });
 	}
 }

@@ -25,68 +25,44 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package org.barcodeapi.apriltag;
+package com.mclarkdev.tools.libapriltag;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+public class LayoutUtil {
 
-import javax.imageio.ImageIO;
-
-public class GenerateTags {
-
-	private static final String PACKAGE = "org.barcodeapi.apriltag.families";
-
-	public static void main(String args[]) throws Exception {
-
-		String tagType = args[0];
-
-		// Lookup the tagFamily class by name
-		Class<? extends TagFamily> clazz = Class.forName(//
-				String.format("%s.%s", PACKAGE, tagType))//
-				.asSubclass(TagFamily.class);
-
-		// Create the tagFamily instance
-		TagFamily tagFamily = clazz//
-				.getDeclaredConstructor().newInstance();
-
-		// Render the tags
-		renderTagFamily(tagFamily);
+	private static int l1DistToEdge(int x, int y, int size) {
+		return Math.min(Math.min(x, size - 1 - x), Math.min(y, size - 1 - y));
 	}
 
-	public static void renderTagFamily(TagFamily tagFamily) {
-		long timeStart = System.currentTimeMillis();
-
-		// Create directory for tag family
-		File tagDir = new File("tags", tagFamily.getFilePrefix());
-		if (!tagDir.exists()) {
-			tagDir.mkdirs();
-		}
-
-		// Print number of tags to be rendered
-		int countTags = tagFamily.getCodes().length;
-		System.out.printf("Generating %d tags for %s\n", //
-				countTags, tagFamily.getFilePrefix());
-
-		// Loop each of the codes in the family
-		for (int tagId = 0; tagId < countTags; tagId++) {
-
-			// Get code and render the image
-			BufferedImage img = tagFamily.getLayout()//
-					.renderToImage(tagFamily.getCodes()[tagId], 8);
-
-			try {
-
-				// Save image to file on disk
-				ImageIO.write(img, "png", //
-						new File(tagDir, String.format("%05d.png", tagId)));
-			} catch (IOException ex) {
-				System.out.println("ex: " + ex);
+	public static ImageLayout getClassicLayout(int size) {
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
+				if (LayoutUtil.l1DistToEdge(x, y, size) == 0) {
+					sb.append('w');
+				} else if (LayoutUtil.l1DistToEdge(x, y, size) == 1) {
+					sb.append('b');
+				} else {
+					sb.append('d');
+				}
 			}
 		}
+		// Classic layout has no name for backwards compatibility.
+		return ImageLayout.Factory.createFromString("", sb.toString());
+	}
 
-		// Calculate and print render time for family
-		long timeRender = (System.currentTimeMillis() - timeStart);
-		System.out.printf("Done: %dms\n\n", timeRender);
+	public static ImageLayout getStandardLayout(int size) {
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
+				if (LayoutUtil.l1DistToEdge(x, y, size) == 1) {
+					sb.append('b');
+				} else if (LayoutUtil.l1DistToEdge(x, y, size) == 2) {
+					sb.append('w');
+				} else {
+					sb.append('d');
+				}
+			}
+		}
+		return ImageLayout.Factory.createFromString("Standard", sb.toString());
 	}
 }

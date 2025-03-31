@@ -25,9 +25,9 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package org.barcodeapi.apriltag.families;
+package com.mclarkdev.tools.libapriltag.families;
 
-import org.barcodeapi.apriltag.TagFamily;
+import com.mclarkdev.tools.libapriltag.TagFamily;
 
 public class Tag36h10 extends TagFamily {
 	public Tag36h10() {

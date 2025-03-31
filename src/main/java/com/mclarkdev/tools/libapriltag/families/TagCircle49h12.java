@@ -25,11 +25,11 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package org.barcodeapi.apriltag.families;
+package com.mclarkdev.tools.libapriltag.families;
 
-import org.barcodeapi.apriltag.ImageLayout;
-import org.barcodeapi.apriltag.TagFamily;
-import org.barcodeapi.apriltag.ImageLayout.Factory;
+import com.mclarkdev.tools.libapriltag.ImageLayout;
+import com.mclarkdev.tools.libapriltag.TagFamily;
+import com.mclarkdev.tools.libapriltag.ImageLayout.Factory;
 
 public class TagCircle49h12 extends TagFamily {
 	private static class ConstructCodes0 {

@@ -25,7 +25,7 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the Regents of The University of Michigan.
 */
 
-package org.barcodeapi.apriltag;
+package com.mclarkdev.tools.libapriltag;
 
 import java.awt.Color;
 import java.awt.Graphics;
