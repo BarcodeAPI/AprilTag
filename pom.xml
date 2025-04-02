@@ -10,7 +10,7 @@
 
 	<groupId>com.mclarkdev.tools</groupId>
 	<artifactId>libapriltag</artifactId>
-	<version>1.5.0-SNAPSHOT</version>
+	<version>1.5.0</version>
 	<packaging>jar</packaging>
 
 	<name>libapriltag</name>
