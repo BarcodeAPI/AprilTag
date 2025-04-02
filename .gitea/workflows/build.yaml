@@ -3,23 +3,27 @@ name: Java Build
 on: [push]
 
 jobs:
-  Build:
+  Build-Artifacts:
     runs-on: linux-amd64
     steps:
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'adopt'
+        java-version: '11'
     - name: Clone Repository
       run: |
         repo="ssh://git@git.mclarkdev.com:2222/${{ gitea.repository }}"
-        echo "Cloning $repo" && git clone --recurse-submodules $repo .  
-        git checkout $GITHUB_REF_NAME             
+        echo "Cloning $repo" && git clone --recurse-submodules $repo .
     - name: Build artifacts with Maven
-      run: mvn clean install
-    - name: Package the artifacts
-      run: |
-        mkdir release/
-        cp target/apriltag.jar release/        
-    - name: Archive job artifact
+      run: mvn clean install -Dgpg.passphrase="${{ secrets.GPG_PASS }}"
+    - name: Publish artifacts
+      run: mvn deploy
+    - name: Archive job artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: release-${{ github.run_id }}
+        name: artifacts
         path: |
-          release/
+          target/*pom
+          target/*jar
+          target/*asc
