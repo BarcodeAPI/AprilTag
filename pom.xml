@@ -15,6 +15,10 @@
 	<url>https://git.mclarkdev.com/LibAPIs/LibAprilTag.git</url>
 	<description>Used to generate AprilTag codes for AR toolkits.</description>
 
+	<scm>
+		<url>https://git.mclarkdev.com/LibAPIs/LibAprilTag.git</url>
+	</scm>
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -29,24 +33,6 @@
 			<url>https://about.mclarkdev.com/</url>
 		</developer>
 	</developers>
-
-	<scm>
-		<url>https://git.mclarkdev.com/LibAPIs/LibAprilTag.git</url>
-	</scm>
-
-	<repositories>
-		<repository>
-			<id>gitea</id>
-			<url>https://git.mclarkdev.com/api/packages/LibAPIs/maven</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>gitea</id>
-			<url>https://git.mclarkdev.com/api/packages/LibAPIs/maven</url>
-		</repository>
-	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -93,30 +79,6 @@
 						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.mclarkdev.tools.libapriltag.GenerateTags</mainClass>
-						</manifest>
-					</archive>
-					<finalName>apriltag</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
